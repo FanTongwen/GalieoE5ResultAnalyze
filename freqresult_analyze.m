@@ -9,24 +9,35 @@
 %}
 
 
-workspace = "G:\20210428\result20211127_test1\";
-file_type = "sivd_%d_E5_1_freqresult.txt";
+workspace = "G:\20210428\result202112013_1hz_bsk_nocarrieraid\";
+file_type = "sivd_%d_E5_3_freqresult.txt";
 file_ns = {7};
 file_names = cellfun(@(x) workspace+sprintf(file_type, x), file_ns, 'UniformOutput', false);
 file_datas = cellfun(@(x) readFile(x), file_names, 'UniformOutput', false);
 
 
+%% 固定载波相位观测文件 对不同的积分时间下的环路跟踪性能进行测试
+%--config--%
+clear
+workspace_ref = "G:\20210428\result202112011_1hz_qinghua_nocarrieraid\"; %参考载波测量值文件
+workspace = "G:\\20210428\\result20220106_0404bpsk%dms35dB\\"; %比较文件
+file_type = "sivd_7_E5_3_freqresult.txt";
+file_type_ref = "sivd_7_E5_measurement.txt";
+file_ns = {5, 10, 20};
+%----run----%
+% 读取被比较文件测量值数据
+file_names = cellfun(@(x) sprintf(workspace,x)+file_type, file_ns, 'UniformOutput', false);
+file_datas = cellfun(@(x) readFile(x), file_names, 'UniformOutput', false);
 
 
-
-
+%%
 
 
 
 
 
 function data = readFile(file_name)
-    data_type = "%f %f %f %f %f %f %f %f %f %f %f";
+    data_type = "%f %f %f %f %f %f %f %f %f";
     file_handle = fopen(file_name);
     data = textscan(file_handle, data_type, 'Delimiter', ',');
     fclose(file_handle);

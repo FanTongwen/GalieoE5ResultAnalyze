@@ -25,8 +25,8 @@ if (SYS == GALS)
     % workspace = "G:\20210428\result20211031\";
     % file_ns = {7};
     % file_type = "sivd_%d_E5_3_measurement.txt";
-    workspace = "G:\20210428\phasefixdata\20211023\1s\m3\";
-    file_ns = {7, 21, 1, 13, 31, 8, 33, 26};
+    workspace = "G:\20210428\result20211206_03scaid8_nocarrieraid\";
+    file_ns = {7};
     file_type = "sivd_%d_E5_measurement.txt";
     
 end
@@ -36,8 +36,13 @@ file_datas = cellfun(@(x) readFile(x), file_names, 'UniformOutput', false);
 file_datas_fix = cellfun(@(x) fixData(x{6}), file_datas, 'UniformOutput', false);
 hold on
 cellfun(@(x) plot(x, '-*'), file_datas_fix, 'UniformOutput', false);
-datastds = cellfun(@(x) std(x(50:end)), file_datas_fix, 'UniformOutput', false); % std从50s后计算，剔除异常值
-file_labels = cellfun(@(x,y) sprintf("GPS%d std %f", x, y), file_ns, datastds, 'UniformOutput', false);
+datastds = cellfun(@(x) std(x(100:end)), file_datas_fix, 'UniformOutput', false); % std从50s后计算，剔除异常值
+if (SYS == GALS)
+    file_labels = cellfun(@(x,y) sprintf("GALS%d std %f (m)", x, y), file_ns, datastds, 'UniformOutput', false);
+end
+if (SYS == GPS)
+    file_labels = cellfun(@(x,y) sprintf("GPS%d std %f (m)", x, y), file_ns, datastds, 'UniformOutput', false);
+end
 legend(file_labels);
 xlabel("time (s)");
 ylabel("ccdd (m)")
